@@ -1,0 +1,36 @@
+#datepicker {
+    width: 512px;
+    height: 256px;
+    background: #aba9ad;
+    display:flex;
+    flex-wrap: wrap;
+}
+
+.datepicker__month {
+    width: 50%;
+    height: 20%;
+    font-size: 32px;
+    text-align: center;
+}
+
+.datepicker__button {
+    width: 25%;
+    height: 20%;
+}
+
+.datepicker__arrow {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.datepicker__arrow_direction_left {
+    background-image: url(./picture/arrow.png);
+}
+
+.datepicker__arrow_direction_right {
+    background-image: url(./picture/arrow.png);
+    transform: scale(-1, 1);
+}
