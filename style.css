@@ -1,27 +1,19 @@
-#datepicker {
-    width: 512px;
-    height: 256px;
-    background: #aba9ad;
-    display:flex;
+.datepicker {
+    display: flex;
     flex-wrap: wrap;
+    width: 420px;
+    background: grey;
 }
 
 .datepicker__month {
     width: 50%;
-    height: 20%;
     font-size: 32px;
     text-align: center;
 }
 
-.datepicker__button {
-    width: 25%;
-    height: 20%;
-}
-
 .datepicker__arrow {
-    width: 100%;
-    height: 100%;
-    background-size: contain;
+    width: 25%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -33,4 +25,36 @@
 .datepicker__arrow_direction_right {
     background-image: url(./picture/arrow.png);
     transform: scale(-1, 1);
+}
+
+.datepicker__containerWeek {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    font-size: 24px;
+}
+
+.containerWeek__dayWeek{
+    width: 56px;
+    box-sizing: border-box;
+    border: 2px solid black;
+    margin: 2px;
+    background: cadetblue;
+    text-align: center;
+}
+
+.datepicker__containerMonth {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.containerMonth__dayNumber{
+    width: 56px;
+    height: 30px;
+    box-sizing: border-box;
+    border: 2px dotted black;
+    margin: 2px;
+    background: darkgrey;
+    text-align: center;
 }
