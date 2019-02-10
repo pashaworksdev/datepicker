@@ -9,7 +9,7 @@ class Datepicker {
         this.month = new Month();
         this.arrowRight = new ArrowRight();
         this.containerWeek = new ContainerWeek();
-        this.containerMonth = new ContainerMonth();
+        this.containerMonth = new ContainerMonth(this.month.getDateCurrent());
     }
 
     draw() {
@@ -119,16 +119,20 @@ class ContainerWeek {
 // возможно можно сделать дочерним классом
 class ContainerMonth {
 
-    constructor() {
+    constructor(currentDate) {
         this.containerMonth = document.createElement('div');
         this.containerMonth.setAttribute("class", "datepicker__containerMonth");
+        this.currentDate = new Date(currentDate);
     }
 
     draw() {
-        for (var day = 0; day < 2; day++) {
-            this.createDay();
-            this.dayNumber.innerHTML = (() => this.startDate())();
-        }
+        this.findDateFirst();
+        // do {
+            for (var day = 0; day < 7; day++) {
+                this.createDay();
+                this.dayNumber.innerHTML = (() => this.startDate())();
+            }
+        // } while ();
         return this.containerMonth;
     }
 
@@ -140,20 +144,25 @@ class ContainerMonth {
     }
 
     startDate() {
-        let currentMonth = datepicker.month.getDateCurrent();
-        currentMonth.setDate(1);
-        //
-        // let firstDay = new Date(currentMonth);
-        // // alert(firstDay);
-        //
-        // let dayWeek = currentMonth.getDay();
-        // // alert(dayWeek);
-        //
-        // alert(firstDay.getDate() - dayWeek);
+        // this.currentDay = this.findDateFirst().getDate() + day;
+        // this.qqqqq = new Date(this.findDateFirst().setDate(this.currentDay));
+        // this.wwww = this.qqqqq.getDate();
+        // return this.wwww;
 
-        let day = currentMonth.getDate(new Date(currentMonth.setDate(2 - currentMonth.getDay())));
-        return day;
+        this.currentDay = this.findDateFirst();
+        this.currentDaySSS = this.currentDay;
+        this.aaaaa = this.findDateFirst().getDate() + 1;
+        this.currentDay = new Date(this.findDateFirst().setDate(this.aaaaa));
+
+        return this.currentDaySSS.getDate();
+        // this.currentDay =
     }
+
+    findDateFirst() {
+        this.dateFirst = new Date(this.currentDate.setDate(1));
+        this.dateStart = new Date(this.dateFirst.setDate(2-this.dateFirst.getDay()));
+        return this.dateStart;
+}
 
 }
 
