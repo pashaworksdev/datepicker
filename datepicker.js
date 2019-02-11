@@ -9,7 +9,7 @@ class Datepicker {
         this.month = new Month();
         this.arrowRight = new ArrowRight();
         this.containerWeek = new ContainerWeek();
-        this.containerMonth = new ContainerMonth(this.month.getDateCurrent());
+        this.containerMonth = new ContainerMonth();
     }
 
     draw() {
@@ -17,7 +17,7 @@ class Datepicker {
         this.containerGeneral.appendChild(this.month.draw());
         this.containerGeneral.appendChild(this.arrowRight.draw());
         this.containerGeneral.appendChild(this.containerWeek.draw());
-        this.containerGeneral.appendChild(this.containerMonth.draw());
+        this.containerGeneral.appendChild(this.containerMonth.draw(this.month.getDateCurrent()));
     }
 
 }
@@ -41,6 +41,8 @@ class Month {
             this.date.setMonth(this.date.getMonth() + 1);
         }
         this.writeMonthName();
+        datepicker.containerMonth.clean();
+        datepicker.containerMonth.draw(this.date);
     }
 
     draw() {
@@ -119,21 +121,31 @@ class ContainerWeek {
 // возможно можно сделать дочерним классом
 class ContainerMonth {
 
-    constructor(currentDate) {
+    constructor() {
         this.containerMonth = document.createElement('div');
         this.containerMonth.setAttribute("class", "datepicker__containerMonth");
-        this.currentDate = new Date(currentDate);
     }
 
-    draw() {
+    draw(currentDate) {
+        this.currentDate = new Date(currentDate);
         this.findDateFirst();
-        // do {
-            for (var day = 0; day < 7; day++) {
+        this.currentDay = this.findDateFirst();
+        do {
+            for (let day = 0; day < 7; day++) {
                 this.createDay();
                 this.dayNumber.innerHTML = (() => this.startDate())();
+                this.currentDay.setDate(this.currentDay.getDate() + 1);
             }
-        // } while ();
+        } while (this.currentDay.getMonth() == this.currentDate.getMonth());
         return this.containerMonth;
+    }
+
+    clean() {
+        let main_block = this.containerMonth;
+        let blocks = main_block.childNodes;
+        for (let i = blocks.length-1; i >= 0; i--) {
+            main_block.removeChild(blocks[i]);
+        }
     }
 
     createDay() {
@@ -144,25 +156,14 @@ class ContainerMonth {
     }
 
     startDate() {
-        // this.currentDay = this.findDateFirst().getDate() + day;
-        // this.qqqqq = new Date(this.findDateFirst().setDate(this.currentDay));
-        // this.wwww = this.qqqqq.getDate();
-        // return this.wwww;
-
-        this.currentDay = this.findDateFirst();
-        this.currentDaySSS = this.currentDay;
-        this.aaaaa = this.findDateFirst().getDate() + 1;
-        this.currentDay = new Date(this.findDateFirst().setDate(this.aaaaa));
-
-        return this.currentDaySSS.getDate();
-        // this.currentDay =
+        return this.currentDay.getDate();
     }
 
     findDateFirst() {
         this.dateFirst = new Date(this.currentDate.setDate(1));
         this.dateStart = new Date(this.dateFirst.setDate(2-this.dateFirst.getDay()));
         return this.dateStart;
-}
+    }
 
 }
 
