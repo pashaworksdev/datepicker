@@ -122,8 +122,8 @@ class ContainerWeek {
 class ContainerMonth {
 
     constructor() {
-        this.containerMonth = document.createElement('div');
-        this.containerMonth.setAttribute("class", "datepicker__containerMonth");
+        this.container = document.createElement('div');
+        this.container.setAttribute("class", "datepicker__containerMonth");
     }
 
     draw(currentDate) {
@@ -137,11 +137,11 @@ class ContainerMonth {
                 this.currentDay.setDate(this.currentDay.getDate() + 1);
             }
         } while (this.currentDay.getMonth() == this.currentDate.getMonth());
-        return this.containerMonth;
+        return this.container;
     }
 
     clean() {
-        let main_block = this.containerMonth;
+        let main_block = this.container;
         let blocks = main_block.childNodes;
         for (let i = blocks.length-1; i >= 0; i--) {
             main_block.removeChild(blocks[i]);
@@ -150,9 +150,9 @@ class ContainerMonth {
 
     createDay() {
         this.dayNumber = document.createElement('div');
-        this.dayNumber.setAttribute("class", "containerMonth");
+        this.dayNumber.setAttribute("class", "container");
         this.dayNumber.classList.add("containerMonth__dayNumber");
-        this.containerMonth.appendChild(this.dayNumber);
+        this.container.appendChild(this.dayNumber);
     }
 
     startDate() {
