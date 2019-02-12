@@ -58,3 +58,11 @@
     background: darkgrey;
     text-align: center;
 }
+
+.containerMonth__dayNumber_tag_grey{
+    background: grey;
+}
+
+.containerMonth__dayNumber_tag_yellow{
+    background: yellowgreen;
+}

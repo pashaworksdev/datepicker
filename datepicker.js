@@ -5,164 +5,142 @@ class Datepicker {
     constructor(containerGeneral) {
         this.containerGeneral = containerGeneral;
         this.containerGeneral.setAttribute("class", "datepicker");
-        this.arrowLeft = new ArrowLeft();
-        this.month = new Month();
-        this.arrowRight = new ArrowRight();
-        this.containerWeek = new ContainerWeek();
-        this.containerMonth = new ContainerMonth();
+        this.today = new Date();
+        this.currentDate = new Date();
+        this.month = new Month("datepicker__month");
+        this.arrowLeft = new ArrowLeft('datepicker__arrow', 'datepicker__arrow_direction_left');
+        this.arrowRight = new ArrowRight('datepicker__arrow', 'datepicker__arrow_direction_right');
+        this.containerWeek = new ContainerWeek("datepicker__containerWeek");
+        this.containerMonth = new ContainerMonth("datepicker__containerMonth");
     }
 
     draw() {
-        this.containerGeneral.appendChild(this.arrowLeft.draw());
-        this.containerGeneral.appendChild(this.month.draw());
-        this.containerGeneral.appendChild(this.arrowRight.draw());
+        this.containerGeneral.appendChild(this.arrowLeft.draw(this));
+        this.containerGeneral.appendChild(this.month.draw(this.currentDate));
+        this.containerGeneral.appendChild(this.arrowRight.draw(this));
         this.containerGeneral.appendChild(this.containerWeek.draw());
-        this.containerGeneral.appendChild(this.containerMonth.draw(this.month.getDateCurrent()));
+        this.containerGeneral.appendChild(this.containerMonth.draw(this.currentDate, this.today));
+    }
+
+    click(direction) {
+        this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+        this.month.writeMonth(this.currentDate);
+        this.containerMonth.clean();
+        this.containerMonth.draw(this.currentDate, this.today);
     }
 
 }
 
 class Month {
 
-    constructor() {
-        this.date = new Date();
+    constructor(className) {
         this.containerMonth = document.createElement('div');
-        this.containerMonth.setAttribute("class", "datepicker__month");
+        this.containerMonth.setAttribute("class", className);
     }
 
-    getDateCurrent() {
-        return this.date;
-    }
-
-    setDateCurrent(change) {
-        if (change === 'left') {
-            this.date.setMonth(this.date.getMonth() - 1);
-        } else {
-            this.date.setMonth(this.date.getMonth() + 1);
-        }
-        this.writeMonthName();
-        datepicker.containerMonth.clean();
-        datepicker.containerMonth.draw(this.date);
-    }
-
-    draw() {
-        this.writeMonthName();
+    draw(currentDate) {
+        this.writeMonth(currentDate);
         return this.containerMonth;
     }
 
-    writeMonthName() {
+    writeMonth(currentDate) {
         let months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-        this.containerMonth.innerHTML = months[this.getDateCurrent().getMonth().toString()] + ' ' + this.getDateCurrent().getFullYear();
+        this.containerMonth.innerHTML = months[currentDate.getMonth().toString()] + ' ' + currentDate.getFullYear();
     }
 
 }
 
 class Arrow {
 
-    constructor() {
+    constructor(classNameOne, classNameTwo) {
         this.buttonArrow = document.createElement('div');
-        this.buttonArrow.setAttribute("class", "datepicker__arrow");
+        this.buttonArrow.setAttribute("class", classNameOne);
+        this.buttonArrow.classList.add(classNameTwo);
     }
 
 }
-//обращаюсь к методу click через datepicker.month - попытаться это исправить
+
 class ArrowLeft extends Arrow {
 
-    draw() {
-        this.buttonArrow.classList.add("datepicker__arrow_direction_left");
-        this.buttonArrow.onclick = () => this.click();
+    draw(object) {
+        this.buttonArrow.onclick = () => object.click(-1);
         return this.buttonArrow;
     }
 
-    click() {
-        datepicker.month.setDateCurrent('left');
-    }
-
 }
-//обращаюсь к методу click через datepicker.month - попытаться это исправить
+
 class ArrowRight extends Arrow {
 
-    draw() {
-        this.buttonArrow.classList.add("datepicker__arrow_direction_right");
-        this.buttonArrow.onclick = () => this.click();
+    draw(object) {
+        this.buttonArrow.onclick = () => object.click(1);
         return this.buttonArrow;
     }
 
-    click() {
-        datepicker.month.setDateCurrent('right');
+}
+
+class ContainerСalendar {
+
+    constructor(className) {
+        this.container = document.createElement('div');
+        this.container.setAttribute("class", className);
+    }
+
+    drawDay(classNameOne, classNameTwo) {
+        this.day = document.createElement('div');
+        this.day.setAttribute("class", classNameOne);
+        this.day.classList.add(classNameTwo);
+        this.container.appendChild(this.day);
     }
 
 }
-// возможно можно сделать дочерним классом
-class ContainerWeek {
 
-    constructor() {
-        this.containerWeek = document.createElement('div');
-        this.containerWeek.setAttribute("class", "datepicker__containerWeek");
-    }
+class ContainerWeek extends ContainerСalendar {
 
     draw() {
         let week = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
-        for (var day = 0; day < 7; day++) {
-            this.createDay();
-            this.dayWeek.innerHTML = week[day];
+        for (let i = 0; i < 7; i++) {
+            this.drawDay();
+            this.day.innerHTML = week[i];
         }
-        return this.containerWeek;
-    }
-
-    createDay() {
-        this.dayWeek = document.createElement('div');
-        this.dayWeek.setAttribute("class", "containerWeek");
-        this.dayWeek.classList.add("containerWeek__dayWeek");
-        this.containerWeek.appendChild(this.dayWeek);
-    }
-
-}
-// возможно можно сделать дочерним классом
-class ContainerMonth {
-
-    constructor() {
-        this.container = document.createElement('div');
-        this.container.setAttribute("class", "datepicker__containerMonth");
-    }
-
-    draw(currentDate) {
-        this.currentDate = new Date(currentDate);
-        this.findDateFirst();
-        this.currentDay = this.findDateFirst();
-        do {
-            for (let day = 0; day < 7; day++) {
-                this.createDay();
-                this.dayNumber.innerHTML = (() => this.startDate())();
-                this.currentDay.setDate(this.currentDay.getDate() + 1);
-            }
-        } while (this.currentDay.getMonth() == this.currentDate.getMonth());
         return this.container;
     }
 
+    drawDay() {
+        super.drawDay("containerWeek", "containerWeek__dayWeek");
+    }
+
+}
+
+class ContainerMonth extends ContainerСalendar {
+
+    draw(currentDate, today) {
+        this.startDay(currentDate);
+        do {
+            for (let i = 0; i < 7; i++) {
+                this.drawDay(currentDate, today);
+                this.day.innerHTML = (() => this.currentDay.getDate())();
+                this.currentDay.setDate(this.currentDay.getDate() + 1);
+            }
+        } while (this.currentDay.getMonth() == currentDate.getMonth());
+        return this.container;
+    }
+
+    drawDay(currentDate, today) {
+        super.drawDay("containerMonth", "containerMonth__dayNumber");
+        if (this.currentDay.getMonth() != currentDate.getMonth()) this.day.classList.add('containerMonth__dayNumber_tag_grey');
+        if (this.currentDay.toString() == today.toString()) this.day.classList.add('containerMonth__dayNumber_tag_yellow');
+    }
+
+    startDay(currentDate) {
+        this.currentDay = new Date(currentDate);
+        this.currentDay.setDate(1);
+        this.currentDay.setDate(2 - this.currentDay.getDay());
+    }
+
     clean() {
-        let main_block = this.container;
-        let blocks = main_block.childNodes;
-        for (let i = blocks.length-1; i >= 0; i--) {
-            main_block.removeChild(blocks[i]);
+        for (let i = this.container.children.length - 1; i >= 0; i--) {
+            this.container.removeChild(this.container.children[i]);
         }
-    }
-
-    createDay() {
-        this.dayNumber = document.createElement('div');
-        this.dayNumber.setAttribute("class", "container");
-        this.dayNumber.classList.add("containerMonth__dayNumber");
-        this.container.appendChild(this.dayNumber);
-    }
-
-    startDate() {
-        return this.currentDay.getDate();
-    }
-
-    findDateFirst() {
-        this.dateFirst = new Date(this.currentDate.setDate(1));
-        this.dateStart = new Date(this.dateFirst.setDate(2-this.dateFirst.getDay()));
-        return this.dateStart;
     }
 
 }
