@@ -134,7 +134,11 @@ class ContainerMonth extends ContainerСalendar {
     startDay(currentDate) {
         this.currentDay = new Date(currentDate);
         this.currentDay.setDate(1);
-        this.currentDay.setDate(2 - this.currentDay.getDay());
+        if (this.currentDay.getDay() == 0) {
+            this.currentDay.setDate(-5);
+        } else {
+            this.currentDay.setDate(2 - this.currentDay.getDay());
+        }
     }
 
     clean() {
